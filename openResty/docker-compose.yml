@@ -1,0 +1,12 @@
+version: "2"
+services:
+  openResty:
+    image: openresty/openresty
+    container_name: openresty
+    ports:
+    - "3308:3306"
+    - "80:80"
+    volumes:
+    - /Users/wulizi/workspace/docker/openResty/nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+    restart: always
+    hostname: openresty

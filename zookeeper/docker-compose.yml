@@ -1,0 +1,22 @@
+version: "2"
+services:
+  zookeeper:
+    image: zookeeper:3.6.1
+    container_name: zookeeper
+    ports:
+    - "2181:2181"
+    restart: always
+    hostname: zookeeper
+  kafka:
+    image: wurstmeister/kafka:2.12-2.5.0
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - "9092:9092"
+    links: 
+    - zookeeper
+    environment: 
+    - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+    - KAFKA_ADVERTISED_PORT=9092
+    - KAFKA_ADVERTISED_HOST_NAME=kafka
+    restart: always

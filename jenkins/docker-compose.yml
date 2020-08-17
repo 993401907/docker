@@ -1,0 +1,15 @@
+version: '2'
+services:  
+  jenkins_data:
+    image: jenkins/jenkins:lts
+
+  jenkins:
+    build: 
+      context: ./
+      dockerfile: ./Dockerfile
+    volumes_from: 
+    - jenkins_data
+    volumes: 
+    - /var/run/docker.sock:/var/run/docker.sock
+    ports: 
+    - "8080:8080"

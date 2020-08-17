@@ -1,0 +1,11 @@
+version: "2"
+services:
+  my_nginx:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: my_nginx
+    ports:
+    - "3308:3308"
+    volumes:
+    - /Users/wulizi/workspace/docker/nginx/nginx.conf:/usr/local/nginx/conf/nginx.conf

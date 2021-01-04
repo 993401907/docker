@@ -1,76 +1,51 @@
-version: "2"
+version: "3"
+
 services:
-  master:
+  redis_1:
     build:
       context: ./
       dockerfile: ./redis/Dockerfile
-    container_name: redis-cluster_master
-    command: redis-server /etc/redis/redis.conf
+    restart: always
+    environment:
+      - REDIS_PORT=8001
     ports:
-      - "6379:6379"
-  slave_1:
+      - '8001:8001'       #服务端口
+      - '18001:18001'   #集群端口
+
+  redis_2:
     build:
       context: ./
       dockerfile: ./redis/Dockerfile
-    container_name: redis-cluster_slave_1
-    command: redis-server /etc/redis/redis.conf --slaveof redis-master 6379
-    links:
-      - master:redis-master
-    ports:
-      - "6380:6379"
-  slave_2:
-    build:
-      context: ./
-      dockerfile: redis/Dockerfile
-    container_name: redis-cluster_slave_2
-    command: redis-server /etc/redis/redis.conf --slaveof redis-master 6379
-    links:
-      - master:redis-master
-    ports:
-      - "6381:6379"
-  sentinel_1:
-    build:
-      context: ./
-      dockerfile: redis-sentinel/Dockerfile
-    container_name: redis-cluster_sentinel_1
-    command: redis-sentinel /etc/redis/sentinel.conf
+    restart: always
     environment:
-      - SENTINEL_DOWN_AFTER=5000
-      - SENTINEL_FAILOVER=5000
-    links:
-      - master:redis-master
-      - slave_1
-      - slave_2
+      - REDIS_PORT=8002
     ports:
-      - "6390:6379"
-      - "26390:26379"
-  sentinel_2:
+      - '8002:8002'       #服务端口
+      - '18002:18002'   #集群端口
+
+
+  redis_3:
     build:
       context: ./
-      dockerfile: redis-sentinel/Dockerfile
-    container_name: redis-cluster_sentinel_2
+      dockerfile: ./redis/Dockerfile
+    restart: always
     environment:
-      - SENTINEL_DOWN_AFTER=5000
-      - SENTINEL_FAILOVER=5000
-    links:
-      - master:redis-master
-      - slave_1
-      - slave_2
+      - REDIS_PORT=8003
     ports:
-      - "6391:6379"
-      - "26391:26379"
-  sentinel_3:
+      - '8003:8003'       #服务端口
+      - '18003:18003'   #集群端口
+
+  redis_4:
     build:
       context: ./
-      dockerfile: redis-sentinel/Dockerfile
-    container_name: redis-cluster_sentinel_3
+      dockerfile: ./redis/Dockerfile
+    restart: always
     environment:
-      - SENTINEL_DOWN_AFTER=5000
-      - SENTINEL_FAILOVER=5000
-    links:
-      - master:redis-master
-      - slave_1
-      - slave_2
+      - REDIS_PORT=8004
     ports:
-      - "6392:6379"
-      - "26392:26379"
+      - '8004:8004'       #服务端口
+      - '18004:18004'   #集群端口
+
+# 集群配置方法
+# docker run --rm -it inem0o/redis-trib create --replicas 1 172.19.165.222:8001 172.19.165.222:8002 172.19.165.222:8003 172.19.165.222:8004
+
